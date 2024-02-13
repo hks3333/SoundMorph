@@ -9,7 +9,7 @@ import time
 from mutagen.mp3 import MP3
 from bs4 import BeautifulSoup
 import requests
-from selenium import webdriver
+# from selenium import webdriver
 from urllib.request import urlopen
 import tkinter as tk
 
@@ -55,8 +55,7 @@ def browseFiles():
 my_font = ctk.CTkFont(family="SF UI Display SemBd", size=12)
 queue_font = ctk.CTkFont(family="SF Pro Display", size=26)
 info_font = ctk.CTkFont(family="SF UI Display SemBd", size=20)
-window.after(201,
-             lambda: window.iconbitmap("soundmorph-logos.ico"))
+window.after(201, lambda: window.iconbitmap("./editor/soundmorph-logos.ico"))
 
 bar = ctk.CTkFrame(master=window, width=1380, height=5, fg_color="#fc3c44", corner_radius=5)
 bar.grid(row=0, column=0, ipady=1, ipadx=338)
@@ -73,7 +72,7 @@ def about_us():
                             #font=my_font)
     #about.place(x=400, y=200)
     #about.configure(font=("Gotham_Bold", 25))
-    img=ctk.CTkImage(Image.open("Creative team-pana.png"),size=(420,420))
+    img = ctk.CTkImage(Image.open("./editor/Creative team-pana.png"), size=(420, 420))
     img_label=ctk.CTkLabel(screen,image=img,text="")
     img_label.place(x=340,y=-12)
 
@@ -165,12 +164,10 @@ SelectList = []
 # user_label=ctk.CTkLabel(window,image=user_image,text="",)
 # user_label.place(x=10,y=40)
 play_button_count = 0
-listbox = CTkListbox(queue, width=170, font=my_font, hover_color="#f94c57", text_color="black", height=630,
-                     highlight_color="#f94c57", fg_color="#fc3c44", border_width=0,
-                     scrollbar_button_color="black", scrollbar_button_hover_color="white")
+listbox = CTkListbox(queue, width=170, font=my_font, hover_color="#f94c57", text_color="black", height=630, highlight_color="#f94c57", fg_color="#fc3c44", border_width=0, scrollbar_button_color="black", scrollbar_button_hover_color="white")
 listbox.place(x=5, y=40)
 
-pause_but = ctk.CTkImage(Image.open("pause_white.png"), size=(25, 30))
+pause_but = ctk.CTkImage(Image.open("./editor/pause_white.png"), size=(25, 30))
 qu_label = ctk.CTkLabel(queue, text="Currently nothing in queue", font=my_font, text_color="black", bg_color="#fc3c44")
 qu_label.place(x=25, y=160)
 
@@ -279,16 +276,16 @@ slider = ctk.CTkSlider(window, width=1000, progress_color="#fc3c44", button_colo
                        button_hover_color="#f94c57", command=slide)
 slider.set(0)
 slider.place(x=70, y=510)
-play_button_img = ctk.CTkImage(Image.open("play_white.png"), size=(25, 30))
+play_button_img = ctk.CTkImage(Image.open("./editor/play_white.png"), size=(25, 30))
 play_button = ctk.CTkButton(window, image=play_button_img, text="", corner_radius=90, fg_color='transparent', width=70,
                             height=70, hover_color="#f94c57", command=play_song, border_color="#fc3c44", border_width=5)
 play_button.place(x=500, y=540)
-forward_button_img = ctk.CTkImage(Image.open("skipwhite.png"), size=(30, 30))
+forward_button_img = ctk.CTkImage(Image.open("./editor/skipwhite.png"), size=(30, 30))
 forward_button = ctk.CTkButton(window, image=forward_button_img, text="", corner_radius=30, fg_color='transparent',
                                width=50, height=40, hover_color="#f94c57")
 forward_button.place(x=600, y=560)
 
-backward_button_img = ctk.CTkImage(Image.open("back_white.png"), size=(30, 30))
+backward_button_img = ctk.CTkImage(Image.open("./editor/back_white.png"), size=(30, 30))
 backward_button = ctk.CTkButton(window, image=backward_button_img, text="", corner_radius=30, fg_color='transparent',
                                 width=50, height=40, hover_color="#f94c57")
 backward_button.place(x=420, y=560)
