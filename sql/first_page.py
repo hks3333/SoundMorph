@@ -96,53 +96,56 @@ def register():
 
 root = ctk.CTk()
 root.title("SoundMorph")
-root.geometry('500x500')
+root.geometry('550x550')
 root.resizable(False, False)
 ctk.set_default_color_theme("dark-blue")
 
 my_font = ctk.CTkFont(family="SF UI Display SemBd", size=12)
 
 screen = ctk.CTkFrame(root, height=500, width=500, background_corner_colors=["#E79215", "#E79215", "#E79215", "#E79215"], fg_color="#fc3c44", corner_radius=5)
-screen.place(x=0, y=0)
+screen.place(x=25, y=25)
 
 login_frame = ctk.CTkFrame(root, height=250, width=150, fg_color="#fc3c44", corner_radius=5)
 register_frame = ctk.CTkFrame(root, height=250, width=150, fg_color="#fc3c44", corner_radius=5)
 
-login_username_label = ctk.CTkLabel(login_frame, text="Username:", text_color="black", font=my_font, fg_color="#E79215")
+login_label = ctk.CTkLabel(login_frame, text="Login", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
+login_label.pack(pady=10)
+login_username_label = ctk.CTkLabel(login_frame, text="Username:", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 login_username_label.pack(pady=10)
 login_username_entry = ctk.CTkEntry(login_frame)
 login_username_entry.pack(pady=20)
 
-login_password_label = ctk.CTkLabel(login_frame, text="Password:", text_color="black", font=my_font, fg_color="#E79215")
+login_password_label = ctk.CTkLabel(login_frame, text="Password:", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 login_password_label.pack(pady=10)
 login_password_entry = ctk.CTkEntry(login_frame, show="*")
 login_password_entry.pack(pady=10)
 
-login_button = ctk.CTkButton(login_frame, text="Login", command=login, fg_color="#E79215", hover_color="#DAA520", font=my_font, text_color="black")
+login_button = ctk.CTkButton(login_frame, text="Login", command=login, fg_color="#E79215", hover_color="#DAA520", font=my_font, text_color="black", corner_radius=5)
 login_button.pack(pady=10)
 
-register_button = ctk.CTkButton(login_frame, text="Register", command=show_register_page, text_color="black", font=my_font, fg_color="#E79215")
+register_button = ctk.CTkButton(login_frame, text="Register", command=show_register_page, text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 register_button.pack(pady=20)
 
-register_username_label = ctk.CTkLabel(register_frame, text="Username:", text_color="black", font=my_font, fg_color="#E79215")
+register_label = ctk.CTkLabel(register_frame, text="Register", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
+register_username_label = ctk.CTkLabel(register_frame, text="Username:", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 register_username_label.pack(pady=10)
 register_username_entry = ctk.CTkEntry(register_frame)
 register_username_entry.pack(pady=10)
 
-register_password_label = ctk.CTkLabel(register_frame, text="Password:", text_color="black", font=my_font, fg_color="#E79215")
+register_password_label = ctk.CTkLabel(register_frame, text="Password:", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 register_password_label.pack(pady=10)
 register_password_entry = ctk.CTkEntry(register_frame, show="*")
 register_password_entry.pack(pady=10)
 
-register_usermail_label = ctk.CTkLabel(register_frame, text="Mail:", text_color="black", font=my_font, fg_color="#E79215")
+register_usermail_label = ctk.CTkLabel(register_frame, text="Mail:", text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 register_usermail_label.pack(pady=10)
 register_usermail_entry = ctk.CTkEntry(register_frame, show="*")
 register_usermail_entry.pack(pady=10)
 
-register_button = ctk.CTkButton(register_frame, text="Register", command=register, fg_color="#E79215", hover_color="#DAA520", font=my_font, text_color="black")
+register_button = ctk.CTkButton(register_frame, text="Register", command=register, fg_color="#E79215", hover_color="#DAA520", font=my_font, text_color="black", corner_radius=5)
 register_button.pack(pady=10)
 
-back_button = ctk.CTkButton(register_frame, text="Back to Login", command=show_login_page, text_color="black", font=my_font, fg_color="#E79215")
+back_button = ctk.CTkButton(register_frame, text="Back to Login", command=show_login_page, text_color="black", font=my_font, fg_color="#E79215", corner_radius=5)
 back_button.pack(pady=20)
 
 show_login_page()
