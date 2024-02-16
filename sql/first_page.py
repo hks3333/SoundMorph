@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from CTkMessagebox import CTkMessagebox as messagebox
 import sqlite3
-from main import *
+import subprocess
 
 connection = sqlite3.connect('./sql/soundmorph.db')
 cursor = connection.cursor()
@@ -61,9 +61,10 @@ def login():
         msg = messagebox(title="Login Successful",
                          message=f"Welcome, {entered_username}", icon="check", option_focus="Continue")
         response = msg.get()
-        if response == "Continue":
+        print(response)
+        if response == "OK":
             root.destroy()
-            exec(open("./editor/main.py").read())
+            subprocess.run(["python3", "editor/main.py"])
 
     elif entered_username == "" or entered_password == "":
         messagebox(title="Login Failed", message="Please enter both username and password",
