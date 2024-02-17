@@ -36,11 +36,9 @@ def login_check(username, password):
 def add_user(username, password, usermail):
     users = show_users()
     userid = 10001 + len(users)
-    print(userid, username, password, usermail)
     query = "INSERT INTO login_details (user_id, username, password, email) VALUES (?, ?, ?, ?);"
     cursor.execute(query, (userid, username, password, usermail))
     connection.commit()
-    print("User added")
     return True
 
 
@@ -158,11 +156,11 @@ register_usermail_entry = ctk.CTkEntry(register_frame, show="*")
 # register_usermail_entry.pack(pady=10)
 register_usermail_entry.place(x=260, y=150)
 
-register_button = ctk.CTkButton(register_frame, text="Register", command=register, fg_color="white", font=my_font, text_color="white", corner_radius=5)
+register_button = ctk.CTkButton(register_frame, text="Register", command=register, fg_color="black", font=my_font, text_color="white", corner_radius=5)
 # register_button.pack(pady=10)
 register_button.place(x=260, y=210)
 
-back_button = ctk.CTkButton(register_frame, text="Back to Login", command=show_login_page, text_color="white", font=my_font, fg_color="white", corner_radius=5)
+back_button = ctk.CTkButton(register_frame, text="Back to Login", command=show_login_page, text_color="white", font=my_font, fg_color="black", corner_radius=5)
 # back_button.pack(pady=20)
 back_button.place(x=100, y=210)
 
