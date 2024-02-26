@@ -63,17 +63,15 @@ def login():
     entered_password = (login_password_entry.get()).encode()
 
     if login_check(entered_username, entered_password) and entered_username != "" and entered_password != "":
-        global user
-        user = entered_username
         msg = messagebox(title="Login Successful",
-                         message=f"Welcome, {entered_username}", icon="check", option_focus="Continue")
+                         message=f"Welcome, {entered_username.decode()}", icon="check", option_focus="Continue")
         response = msg.get()
         print(response)
         if response == "OK":
             f = get_file_path("editor/main.py")
             print(f)
             root.destroy()
-            subprocess.run(["python3", f])
+            subprocess.run(["python3", f, str(entered_username.decode())])
 
     elif entered_username == "" or entered_password == "":
         messagebox(title="Login Failed", message="Please enter both username and password",
