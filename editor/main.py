@@ -16,6 +16,10 @@ import struct
 #struct is used to convert the data form the binary values from pyaudio into integer to display it later on
 import matplotlib.pyplot as plt
 import wave
+import os
+
+def get_file_path(filename):
+    return os.path.abspath(filename)
 
 songs = []
 org_song = []
@@ -44,7 +48,7 @@ pygame.mixer.init()
 
 
 def browseFiles():
-    filename = ctk.filedialog.askopenfilename(initialdir="/",
+    filename = ctk.filedialog.askopenfilename(initialdir=get_file_path(""),
                                               title="Select a File",
                                               filetypes=(("MP3 files", "*.mp3"),))
 
@@ -78,7 +82,7 @@ def about_us():
     # font=my_font)
     # about.place(x=400, y=200)
     # about.configure(font=("Gotham_Bold", 25))
-    img = ctk.CTkImage(Image.open(r"./editor/Creative team-pana.png"), size=(420, 420))
+    img = ctk.CTkImage(Image.open(get_file_path("editor/Creative team-pana.png")), size=(420, 420))
     img_label = ctk.CTkLabel(screen, image=img, text="")
     img_label.place(x=340, y=-12)
 
@@ -175,7 +179,7 @@ listbox = CTkListbox(queue, width=170, font=my_font, hover_color="#f94c57", text
                      scrollbar_button_color="black", scrollbar_button_hover_color="white")
 listbox.place(x=5, y=40)
 
-pause_but = ctk.CTkImage(Image.open(r"./editor/pause_white.png"), size=(25, 30))
+pause_but = ctk.CTkImage(Image.open(get_file_path("editor/pause_white.png")), size=(25, 30))
 qu_label = ctk.CTkLabel(queue, text="Currently nothing in queue", font=my_font, text_color="black", bg_color="#fc3c44")
 qu_label.place(x=25, y=160)
 
@@ -303,16 +307,16 @@ slider = ctk.CTkSlider(window, width=1000, progress_color="#fc3c44", button_colo
                        button_hover_color="#f94c57", command=slide)
 slider.set(0)
 slider.place(x=70, y=510)
-play_button_img = ctk.CTkImage(Image.open(r"./editor/play_white.png"), size=(25, 30))
+play_button_img = ctk.CTkImage(Image.open(get_file_path("editor/play_white.png")), size=(25, 30))
 play_button = ctk.CTkButton(window, image=play_button_img, text="", corner_radius=90, fg_color='transparent', width=70,
                             height=70, hover_color="#f94c57", command=play_song, border_color="#fc3c44", border_width=5)
 play_button.place(x=500, y=540)
-forward_button_img = ctk.CTkImage(Image.open(r"./editor/skipwhite.png"), size=(30, 30))
+forward_button_img = ctk.CTkImage(Image.open(get_file_path("editor/skipwhite.png")), size=(30, 30))
 forward_button = ctk.CTkButton(window, image=forward_button_img, text="", corner_radius=30, fg_color='transparent',
                                width=50, height=40, hover_color="#f94c57", command=forward)
 forward_button.place(x=600, y=560)
 
-backward_button_img = ctk.CTkImage(Image.open(r"./editor/back_white.png"), size=(30, 30))
+backward_button_img = ctk.CTkImage(Image.open(get_file_path("editor/back_white.png")), size=(30, 30))
 backward_button = ctk.CTkButton(window, image=backward_button_img, text="", corner_radius=30, fg_color='transparent',
                                 width=50, height=40, hover_color="#f94c57", command=backward)
 backward_button.place(x=420, y=560)
@@ -337,7 +341,7 @@ def trimmed_song():
 
     song_slice = song[val_start:val_end]
     print(song_slice)
-    export_path = "./player/export_weeknd.mp3"
+    export_path = "C:\\Users\\DELL\\Desktop\\songs\\trimmed_song.mp3"
     song_slice.export(export_path, format="mp3")
     print(f"Trimmed song exported successfully to {export_path}")
 
@@ -403,9 +407,10 @@ def wet_(value):
     print('Updating wet size:', value)
     global wet_val
     wet_val=value
-    board = Pedalboard([Reverb(wet_level=value)])
+    board = Pedalboard([Reverb(
+        wet_level=value
+    )])
     lbl_wet_val = ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=720, y=420)
-
 def dry_(value):
     print('Updating damp size:', value)
     global dry_val
@@ -422,7 +427,7 @@ def export():
     sf.write("audio.wav", effected,sample_rate)
 
 
-con = sqlite3.connect('./sql/soundmorph.db')
+con = sqlite3.connect(get_file_path('sql/soundmorph.db'))
 cur = con.cursor()
 
 def check_song_exists(user, song):
@@ -452,12 +457,12 @@ def reverber():
     for widget in screen.winfo_children():
         widget.destroy()
     ctk.CTkButton(screen, text_color="black", font=my_font, text="Export",command=export,fg_color='#fc3c44',hover_color='#fc3c44').place(x=200, y=410)
-    # ctk.CTkButton(screen, text_color="black", font=my_font, text="Save",command=export, fg_color='#fc3c44', hover_color='#fc3c44',command = store_reverb()).place(x=780, y=410)
+    ctk.CTkButton(screen, text_color="black", font=my_font, text="Save",command=export, fg_color='#fc3c44', hover_color='#fc3c44').place(x=820, y=410)
     global board
     # Import audio file
     print('Importing audio...')
     global audio,sample_rate
-    audio, sample_rate = sf.read(r"./player/weeknd.wav")
+    audio, sample_rate = sf.read(get_file_path("player/weeknd.wav"))
     print('Slowing audio...')
     sample_rate -= trunc(sample_rate * 0.08)
     global board
@@ -494,7 +499,7 @@ def visualise():
     sampling_rate=44100 # in HZ
     p=pa.PyAudio()
 
-    with wave.open(r"./player/weeknd.wav", 'rb') as wf:
+    with wave.open("player/weeknd.wav", 'rb') as wf:
         stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                         channels=wf.getnchannels(),
                         rate=wf.getframerate(),

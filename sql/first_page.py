@@ -3,10 +3,13 @@ from CTkMessagebox import CTkMessagebox as messagebox
 import sqlite3
 import subprocess
 from hashlib import sha256
+import os
 
-connection = sqlite3.connect('./sql/soundmorph.db')
+def get_file_path(filename):
+    return os.path.abspath(filename)
+
+connection = sqlite3.connect(get_file_path('sql/soundmorph.db'))
 cursor = connection.cursor()
-
 
 def show_users():
     query = "SELECT * FROM login_details;"
@@ -15,6 +18,7 @@ def show_users():
     details = []
     for row in cursor.fetchall():
         details.append(row)
+        print(row)
     return details
 
 
@@ -66,8 +70,10 @@ def login():
         response = msg.get()
         print(response)
         if response == "OK":
+            f = get_file_path("editor/main.py")
+            print(f)
             root.destroy()
-            subprocess.run(["python3", "editor/main.py"])
+            subprocess.run(["python3", f])
 
     elif entered_username == "" or entered_password == "":
         messagebox(title="Login Failed", message="Please enter both username and password",
