@@ -1,13 +1,20 @@
-import sqlite3
 import customtkinter as ctk
-from PIL import Image
+from tkinter.font import Font
+import pyglet
+from tkinter import filedialog
+from PIL import Image, ImageTk
 import pygame
 from CTkListbox import *
-from CTkMessagebox import CTkMessagebox as messagebox
 import time
 from mutagen.mp3 import MP3
+from bs4 import BeautifulSoup
+import requests
+from selenium import webdriver
+from urllib.request import urlopen
+import tkinter as tk
 from pydub import AudioSegment
 from pydub.playback import play
+import os
 import soundfile as sf
 from pedalboard import Pedalboard, Reverb
 from math import trunc
@@ -17,12 +24,6 @@ import struct
 #struct is used to convert the data form the binary values from pyaudio into integer to display it later on
 import matplotlib.pyplot as plt
 import wave
-import os
-import sys
-
-user = sys.argv[1]
-def get_file_path(filename):
-    return os.path.abspath(filename)
 
 songs = []
 org_song = []
@@ -51,14 +52,13 @@ pygame.mixer.init()
 
 
 def browseFiles():
-    filename = ctk.filedialog.askopenfilename(initialdir=get_file_path(""),
+    filename = ctk.filedialog.askopenfilename(initialdir="/",
                                               title="Select a File",
                                               filetypes=(("MP3 files", "*.mp3"),))
 
     if filename not in songs:
         songs.append(filename)
         org_song.append(filename)
-    print(songs,org_song)
     insert()
 
     # Change label contents
@@ -83,10 +83,10 @@ screen.place(x=10, y=40)
 #########################################
 def about_us():
     # about = ctk.CTkLabel(screen, text="Hiyaa there !!\nthank you for choosing SoundMorph", text_color="#fc3c44",
-    # font=my_font) 
+    # font=my_font)
     # about.place(x=400, y=200)
     # about.configure(font=("Gotham_Bold", 25))
-    img = ctk.CTkImage(Image.open(get_file_path("editor/Creative team-pana.png")), size=(420, 420))
+    img = ctk.CTkImage(Image.open("Creative team-pana.png"), size=(420, 420))
     img_label = ctk.CTkLabel(screen, image=img, text="")
     img_label.place(x=340, y=-12)
 
@@ -125,7 +125,9 @@ def create_frame_edit():
         trim = ctk.CTkButton(menu, font=my_font, text="Trim", text_color="black", fg_color="#fc3c44",
                              hover_color="#f94c57", anchor='w', corner_radius=0, command=trimmer)
         trim.pack(side=ctk.TOP, anchor=ctk.W)
-        reverb = ctk.CTkButton(menu, font=my_font, text="Reverb", text_color="black", fg_color="#fc3c44", hover_color="#f94c57", anchor='w', corner_radius=0,command=lambda: reverber(user))
+
+        reverb = ctk.CTkButton(menu, font=my_font, text="Reverb", text_color="black", fg_color="#fc3c44",
+                               hover_color="#f94c57", anchor='w', corner_radius=0,command=reverber)
         reverb.pack(side=ctk.TOP, anchor=ctk.W)
     else:
         destroy_frame()
@@ -181,7 +183,7 @@ listbox = CTkListbox(queue, width=170, font=my_font, hover_color="#f94c57", text
                      scrollbar_button_color="black", scrollbar_button_hover_color="white")
 listbox.place(x=5, y=40)
 
-pause_but = ctk.CTkImage(Image.open(get_file_path("editor/pause_white.png")), size=(25, 30))
+pause_but = ctk.CTkImage(Image.open("pause_white.png"), size=(25, 30))
 qu_label = ctk.CTkLabel(queue, text="Currently nothing in queue", font=my_font, text_color="black", bg_color="#fc3c44")
 qu_label.place(x=25, y=160)
 
@@ -309,16 +311,16 @@ slider = ctk.CTkSlider(window, width=1000, progress_color="#fc3c44", button_colo
                        button_hover_color="#f94c57", command=slide)
 slider.set(0)
 slider.place(x=70, y=510)
-play_button_img = ctk.CTkImage(Image.open(get_file_path("editor/play_white.png")), size=(25, 30))
+play_button_img = ctk.CTkImage(Image.open("play_white.png"), size=(25, 30))
 play_button = ctk.CTkButton(window, image=play_button_img, text="", corner_radius=90, fg_color='transparent', width=70,
                             height=70, hover_color="#f94c57", command=play_song, border_color="#fc3c44", border_width=5)
 play_button.place(x=500, y=540)
-forward_button_img = ctk.CTkImage(Image.open(get_file_path("editor/skipwhite.png")), size=(30, 30))
+forward_button_img = ctk.CTkImage(Image.open("skipwhite.png"), size=(30, 30))
 forward_button = ctk.CTkButton(window, image=forward_button_img, text="", corner_radius=30, fg_color='transparent',
                                width=50, height=40, hover_color="#f94c57", command=forward)
 forward_button.place(x=600, y=560)
 
-backward_button_img = ctk.CTkImage(Image.open(get_file_path("editor/back_white.png")), size=(30, 30))
+backward_button_img = ctk.CTkImage(Image.open("back_white.png"), size=(30, 30))
 backward_button = ctk.CTkButton(window, image=backward_button_img, text="", corner_radius=30, fg_color='transparent',
                                 width=50, height=40, hover_color="#f94c57", command=backward)
 backward_button.place(x=420, y=560)
@@ -373,8 +375,8 @@ def trimmer():
 
     # Slicing logic
     global start, end
-    ctk.CTkLabel(screen,text="Start",font=my_font,text_color='#fc3c44').place(x=474,y=220)
-    ctk.CTkLabel(screen,text="End",font=my_font,text_color='#fc3c44').place(x=620,y=220)
+    label_str=ctk.CTkLabel(screen,text="Start",font=my_font,text_color='#fc3c44').place(x=474,y=220)
+    label_end=ctk.CTkLabel(screen,text="End",font=my_font,text_color='#fc3c44').place(x=620,y=220)
     start = ctk.CTkTextbox(screen, width=100, height=70,activate_scrollbars=False,font=trimmer_font)
     start.place(x=450, y=250)
 
@@ -391,77 +393,51 @@ def room_(value):
     print('Updating room size:', value)
     global room_val
     room_val = value
-    Pedalboard([Reverb(room_size=value)])
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=120, y=420)
-
+    board = Pedalboard([Reverb(
+        room_size=value
+    )])
+    lbl_room_val = ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=120, y=420)
 def damp_(value):
     print('Updating dry size:', value)
     global damp_val
     damp_val=value
-    Pedalboard([Reverb(damping=value)])
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=420, y=420)
-
+    board = Pedalboard([Reverb(
+        damping=value
+    )])
+    lbl_dry_val = ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=420, y=420)
 def wet_(value):
-    # print('Updating wet size:', value)
+    print('Updating wet size:', value)
     global wet_val
     wet_val=value
-    Pedalboard([Reverb(wet_level=value)])
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=720, y=420)
-
+    board = Pedalboard([Reverb(
+        wet_level=value
+    )])
+    lbl_wet_val = ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=720, y=420)
 def dry_(value):
-    # print('Updating damp size:', value)
+    print('Updating damp size:', value)
     global dry_val
     dry_val=value
-    Pedalboard([Reverb(dry_level=value)])
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=1020, y=420)
+    board = Pedalboard([Reverb(
+        dry_level=value
+    )])
+    lbl_damp_val = ctk.CTkLabel(screen, text_color='white', font=my_font, text=f"{value:.2f}"[:4]).place(x=1020, y=420)
 
 def export():
     print('Exporting audio...')
 
     effected = board(audio, sample_rate)
-    s = ("".join(i for i in songs[0].split(".mp3"))).split("/")[-1]
-    sf.write(f"reverb_{s}.wav", effected,sample_rate)
-    messagebox(title="Successful", message=f"Exported into reverb_{s}.wav", icon="check", option_focus="Continue")
-
-
-con = sqlite3.connect(get_file_path('sql/soundmorph.db'))
-cur = con.cursor()
-
-def check_song_exists(user, song):
-    query = "SELECT * FROM reverb WHERE username = ? AND song = ?;"
-    cur.execute(query, (user, song))
-    return cur.fetchall()
-
-
-def store_reverb(user, song, room, damp, wet, dry):
-    room, damp, wet, dry = format(room, ".2f"), format(damp, ".2f"), format(wet, ".2f"), format(dry, ".2f")
-    if check_song_exists(user, song) != []:
-        query = "UPDATE reverb SET room = ?, damp = ?, wet = ?, dry = ? WHERE username = ? AND song = ?;"
-        cur.execute(query, (room, damp, wet, dry, user, song))
-        con.commit()
-        messagebox(title="Successful", message=f"Updated the content of the {song}", icon="check", option_focus="Continue")
-        return
-
-    query = "INSERT INTO reverb (username, song, room, damp, wet, dry) VALUES (?, ?, ?, ?, ?, ?);"
-    cur.execute(query, (user, song, room, damp, wet, dry))
-    con.commit()
-    messagebox(title="Successful", message=f"Added the content of the {song}", icon="check", option_focus="Continue")
-
-
-def get_reverb(user, song):
-    query = "SELECT * FROM reverb WHERE user = ? AND song = ?;"
-    cur.execute(query, (user, song))
-    return cur.fetchall()[0]
-
-def reverber(user):
+    sf.write("audio.wav", effected,sample_rate)
+def reverber():
     for widget in screen.winfo_children():
         widget.destroy()
-    ctk.CTkButton(screen, text_color="black", font=my_font, text="Export",command=export,fg_color='#fc3c44',hover_color='#fc3c44').place(x=200, y=410)
+    ctk.CTkButton(screen, text_color="black", font=my_font, text="Export",command=export,fg_color='#fc3c44',hover_color='#fc3c44').place(x=520, y=410)
     global board
     # Import audio file
     print('Importing audio...')
     global audio,sample_rate
-    audio, sample_rate = sf.read(get_file_path("player/weeknd.wav"))
+    audio, sample_rate = sf.read(ctk.filedialog.askopenfilename(initialdir="/",
+                                              title="Select a File",
+                                              filetypes=(("wav files", "*.wav"),)))
     print('Slowing audio...')
     sample_rate -= trunc(sample_rate * 0.08)
     global board
@@ -469,20 +445,15 @@ def reverber(user):
 
     # Slow audio
     global room
-    room_slider = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=room_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57")
-    room_slider.place(x=120,y=10)
-    board(audio, sample_rate)
-    damp_slider = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=damp_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57")
-    damp_slider.place(x=420,y=10)
-    wet_slider = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=wet_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57")
-    wet_slider.place(x=720,y=10)
-    dry_slider = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=dry_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57")
-    dry_slider.place(x=1020,y=10)
-    ctk.CTkLabel(screen,text_color='white',font=my_font,text="Room").place(x=120,y=400)
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text="Damp").place(x=420, y=400)
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text="Wet").place(x=720, y=400)
-    ctk.CTkLabel(screen, text_color='white', font=my_font, text="Dry").place(x=1020, y=400)
-    ctk.CTkButton(screen, text_color="black", font=my_font, text="Save", command=lambda: store_reverb(user, ("".join(i for i in songs[0].split(".mp3"))).split("/")[-1], room_slider.get(), damp_slider.get(), wet_slider.get(), dry_slider.get()), fg_color='#fc3c44', hover_color='#fc3c44').place(x=820, y=410)
+    room=ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=room_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57").place(x=120,y=10)
+    effected = board(audio, sample_rate)
+    damp = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=damp_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57").place(x=420,y=10)
+    wet = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=wet_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57").place(x=720,y=10)
+    dry = ctk.CTkSlider(screen,from_=0, to=1,orientation='vertical',command=dry_,height=380,progress_color='#fc3c44',button_color="#fc3c44",button_hover_color="#f94c57").place(x=1020,y=10)
+    lbl_room=ctk.CTkLabel(screen,text_color='white',font=my_font,text="Room").place(x=120,y=400)
+    lbl_damp = ctk.CTkLabel(screen, text_color='white', font=my_font, text="Damp").place(x=420, y=400)
+    lbl_wet = ctk.CTkLabel(screen, text_color='white', font=my_font, text="Wet").place(x=720, y=400)
+    lbl_dry = ctk.CTkLabel(screen, text_color='white', font=my_font, text="Dry").place(x=1020, y=400)
 
 
 def insert():
@@ -495,15 +466,16 @@ def insert():
         qu_label.destroy()
         j += 1
         print(play_button_count)
-
 def visualise():
     CHUNK=2048*2# NUmber of samples plotteed per second
-    # FORMAT=pa.paInt16
-    # CHANNEL=1
-    # sampling_rate=44100 # in HZ
+    FORMAT=pa.paInt16
+    CHANNEL=1
+    sampling_rate=44100 # in HZ
     p=pa.PyAudio()
 
-    with wave.open("player/weeknd.wav", 'rb') as wf:
+    with wave.open(ctk.filedialog.askopenfilename(initialdir="/",
+                                              title="Select a File",
+                                              filetypes=(("wav files", "*.wav"),)), 'rb') as wf:
         stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                         channels=wf.getnchannels(),
                         rate=wf.getframerate(),
@@ -514,13 +486,15 @@ def visualise():
         ax.set_ylim(-60000,60000)
         ax.set_xlim=(0,CHUNK)
         fig.show()
-
+        plt.show(block=False)
         while len(data := wf.readframes(2048)):
             stream.write(data)
-            data_int=struct.unpack(str(CHUNK)+'h',data)
+            data_int = struct.unpack(str(CHUNK) + 'h', data)
             line.set_ydata(data_int)
             fig.canvas.draw()
             fig.canvas.flush_events()
 
+
 window.mainloop()
+
 print(songs)
