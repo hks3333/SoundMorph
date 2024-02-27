@@ -91,7 +91,7 @@ def about_us():
     # about.place(x=400, y=200)
     # about.configure(font=("Gotham_Bold", 25))
     img = ctk.CTkImage(Image.open(get_file_path(
-        "editor/Creative team-pana.png")), size=(420, 420))
+        "Creative team-pana.png")), size=(420, 420))
     img_label = ctk.CTkLabel(screen, image=img, text="")
     img_label.place(x=340, y=-12)
 
@@ -186,7 +186,7 @@ listbox = CTkListbox(queue, width=170, font=my_font, hover_color="#f94c57", text
 listbox.place(x=5, y=40)
 
 pause_but = ctk.CTkImage(Image.open(
-    get_file_path("editor/pause_white.png")), size=(25, 30))
+    get_file_path("pause_white.png")), size=(25, 30))
 qu_label = ctk.CTkLabel(queue, text="Currently nothing in queue",
                         font=my_font, text_color="black", bg_color="#fc3c44")
 qu_label.place(x=25, y=160)
@@ -314,18 +314,18 @@ slider = ctk.CTkSlider(window, width=1000, progress_color="#fc3c44", button_colo
 slider.set(0)
 slider.place(x=70, y=510)
 play_button_img = ctk.CTkImage(Image.open(
-    get_file_path("editor/play_white.png")), size=(25, 30))
+    get_file_path("play_white.png")), size=(25, 30))
 play_button = ctk.CTkButton(window, image=play_button_img, text="", corner_radius=90, fg_color='transparent', width=70,
                             height=70, hover_color="#f94c57", command=play_song, border_color="#fc3c44", border_width=5)
 play_button.place(x=500, y=540)
 forward_button_img = ctk.CTkImage(Image.open(
-    get_file_path("editor/skipwhite.png")), size=(30, 30))
+    get_file_path("skipwhite.png")), size=(30, 30))
 forward_button = ctk.CTkButton(window, image=forward_button_img, text="", corner_radius=30, fg_color='transparent',
                                width=50, height=40, hover_color="#f94c57", command=forward)
 forward_button.place(x=600, y=560)
 
 backward_button_img = ctk.CTkImage(Image.open(
-    get_file_path("editor/back_white.png")), size=(30, 30))
+    get_file_path("back_white.png")), size=(30, 30))
 backward_button = ctk.CTkButton(window, image=backward_button_img, text="", corner_radius=30, fg_color='transparent',
                                 width=50, height=40, hover_color="#f94c57", command=backward)
 backward_button.place(x=420, y=560)
@@ -446,7 +446,7 @@ def export():
                message=f"Exported into reverb_{s}.wav", icon="check", option_focus="Continue")
 
 
-con = sqlite3.connect(get_file_path('sql/soundmorph.db'))
+con = sqlite3.connect(get_file_path('soundmorph.db'))
 cur = con.cursor()
 
 
@@ -489,7 +489,10 @@ def reverber(user):
     # Import audio file
     print('Importing audio...')
     global audio, sample_rate
-    audio, sample_rate = sf.read(get_file_path("player/weeknd.wav"))
+    filename = ctk.filedialog.askopenfilename(initialdir=get_file_path(""),
+                                              title="Select a File",
+                                              filetypes=(("WAV files", "*.wav"),))
+    audio, sample_rate = sf.read(get_file_path(filename))
     print('Slowing audio...')
     sample_rate -= trunc(sample_rate * 0.08)
     global board
@@ -540,8 +543,10 @@ def visualise():
     # CHANNEL=1
     # sampling_rate=44100 # in HZ
     p = pa.PyAudio()
-
-    with wave.open("player/weeknd.wav", 'rb') as wf:
+    filename = ctk.filedialog.askopenfilename(initialdir=get_file_path(""),
+                                              title="Select a File",
+                                              filetypes=(("WAV files", "*.wav"),))
+    with wave.open(filename, 'rb') as wf:
         stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                         channels=wf.getnchannels(),
                         rate=wf.getframerate(),
